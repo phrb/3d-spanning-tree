@@ -3,7 +3,6 @@ import random
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d.axes3d as p3
 import matplotlib.animation as animation
-plt.rcParams['animation.ffmpeg_path'] = '/usr/bin/ffmpeg'
 
 class Point:
     def __init__ (self, coordinates, next_p):
@@ -148,15 +147,11 @@ def animate (i):
     connection = connections[i]
     p1 = connection[0]
     p2 = connection[1]
-    #p1 = path.head
-    #while p1.next_p != None:
-        #p2 = p1.next_p
     lines.append (space.plot (
         [p1[0], p2[0]],
         [p1[1], p2[1]],
         [p1[2], p2[2]],
         antialiased = True))
-        #p1 = p1.next_p
 
     space.view_init (11, azim=2.5 * i)
     return lines
