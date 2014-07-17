@@ -118,15 +118,12 @@ def is_valid (path):
 
     return False
 
-def walk ():
+def walk (max_path_length):
     painted = 2
-    max_path_length = 300
     has_live_paths = True
-    print ("Walking")
+    print ("Walking...")
     while (painted < n*n*n):
         has_live_paths = False
-        if (painted % 100 == 0):
-            print (painted)
         for path in path_list:
             if (path.dead == False):
                 has_live_paths = True
@@ -145,6 +142,7 @@ def walk ():
             print ("All paths died.")
             break
 
+    print ("Done!")
     print ("Painted: ", painted)
 
 def animate (i):
@@ -158,13 +156,23 @@ def animate (i):
         [p1[0], p2[0]],
         [p1[1], p2[1]],
         [p1[2], p2[2]],
-        ))
+        antialiased = True))
         #p1 = p1.next_p
 
-    space.view_init (azim=1.5 * i)
+    space.view_init (11, azim=3 * i)
     return lines
 
-n = 100 
+if (len(sys.argv) == 2):
+    print ("""Usage:
+    $ python spanning_tree.py [<cube_size> <max_path_length>]
+            """)
+    sys.exit()
+elif (len(sys.argv) > 2):
+    max_path_length = int (sys.argv[2])
+    n = int (sys.argv[1])
+else:
+    max_path_length = 1 
+    n = 10 
 
 figure = plt.figure ()
 space = figure.add_axes ([0, 0, 1, 1], projection='3d')
@@ -190,7 +198,7 @@ path_list.append (Path (p0, p1))
 connections.append ([list(p0.coordinates), 
                      list(p1.coordinates)])
 
-walk ()
+walk (max_path_length)
 
 print ("Paths: ", len(path_list))
 
