@@ -16,7 +16,6 @@ class Path:
         self.last = last
         self.head.next_p = self.last
         self.length = 2
-        self.branches = []
         self.dead = False
 
 def reset (path):
@@ -55,7 +54,7 @@ def fork (path, new_coord, painted):
     
     return painted
 
-def branch (path, direction):
+def find (path, direction):
     new_coord = [0,0,0]
     for i in range (len (path.last.coordinates)):
         new_coord[i] = path.last.coordinates[i]
@@ -128,7 +127,7 @@ def walk (max_path_length):
             if (path.dead == False):
                 has_live_paths = True
                 direction = random.randrange (0, 6)
-                new_coord = branch (path, direction)
+                new_coord = find (path, direction)
                 valid = is_valid (path)
                 if (valid):
                     if (path.length >= max_path_length and
@@ -159,7 +158,7 @@ def animate (i):
         antialiased = True))
         #p1 = p1.next_p
 
-    space.view_init (11, azim=3 * i)
+    space.view_init (11, azim=2.5 * i)
     return lines
 
 if (len(sys.argv) == 2):
