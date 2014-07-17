@@ -1,9 +1,9 @@
 import sys
 import random
-#import matplotlib.pyplot as plt
-#import mpl_toolkits.mplot3d.axes3d as p3
-#import matplotlib.animation as animation
-
+from pyqtgraph.Qt import QtCore, QtGui
+import pyqtgraph.opengl as gl
+import pyqtgraph as pg
+import numpy as np
 
 class Point:
     def __init__ (self, coordinates, next_p):
@@ -144,19 +144,6 @@ def walk (max_path_length):
     print ("Done!")
     print ("Painted: ", painted)
 
-#def animate (i):
-#    connection = connections[i]
-#    p1 = connection[0]
-#    p2 = connection[1]
-#    lines.append (space.plot (
-#        [p1[0], p2[0]],
-#        [p1[1], p2[1]],
-#        [p1[2], p2[2]],
-#        antialiased = True))
-
-#    space.view_init (11, azim=2.5 * i)
-#    return lines
-
 if (len(sys.argv) == 2):
     print ("""Usage:
     $ python spanning_tree.py [<cube_size> <max_path_length>]
@@ -169,13 +156,11 @@ else:
     max_path_length = 1 
     n = 10 
 
-#figure = plt.figure ()
-#space = figure.add_axes ([0, 0, 1, 1], projection='3d')
-#space.axis ('off')
-
-#space.set_xlim3d ([0, n])
-#space.set_ylim3d ([0, n])
-#space.set_zlim3d ([0, n])
+app = QtGui.QApplication ([])
+window = gl.GLViewWidget ()
+window.opts['distance'] = n * 3 
+window.show ()
+window.setWindowTitle ("Test")
 
 cube = [[[
     0 
@@ -197,12 +182,28 @@ walk (max_path_length)
 
 print ("Paths: ", len(path_list))
 
-#anim = animation.FuncAnimation (
-#        figure, 
-#        animate,
-#        frames = len(connections),
-#        interval=2, 
-#        blit=False,
-#        repeat=True
-#        )
-#plt.show()
+current_frame = 0
+
+def animate ():
+    global current_frame
+    if (current_frame < len (connections)):
+        p1 = connections[current_frame][0]
+        p2 = connections[current_frame][1]
+        points = np.vstack (
+                            [[p1[0], p2[0]],
+                             [p1[1], p2[1]],
+                             [p1[2], p2[2]]]
+                ).transpose ()
+        colors = pg.glColor ((current_frame,n * 1.001))
+        plot = gl.GLLinePlotItem (pos=points,
+                color = colors,
+                width = 300,
+                antialias=True)
+        window.addItem (plot)
+        current_frame += 1
+
+timer = QtCore.QTimer ()
+timer.timeout.connect (animate)
+timer.start (0)
+
+QtGui.QApplication.instance ().exec_()    
