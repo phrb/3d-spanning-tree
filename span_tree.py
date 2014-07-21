@@ -65,14 +65,19 @@ class Point:
         npos = self.get_indexes (direction)
         return npos
 
-if (len(sys.argv) > 2):
+if (len(sys.argv) > 3):
     print ("""Usage:
-    $ python spanning_tree.py [cube_size]
+    $ python spanning_tree.py [<random|weighted|depth|shell> <cube_size>]
             """)
     sys.exit()
+elif (len(sys.argv) == 3):
+    walk_mode = sys.argv[1]
+    n = int (sys.argv[2])
 elif (len(sys.argv) == 2):
-    n = int (sys.argv[1])
+    walk_mode = sys.argv[1]
+    n = 6
 else:
+    walk_mode = "random"
     n = 6
 
 current_frame = 0
@@ -165,7 +170,7 @@ def weighted_walk ():
         current_points = []
         for p in working:
             direction = random.randrange (0, 100, 1)
-            if (direction < 60):
+            if (direction < 83):
                 direction = p.came_from
             else:
                 direction %= 6
@@ -221,10 +226,13 @@ def animate ():
         current_frame += 1
     current_frame += 1
 
-#random_walk ()
-#weighted_walk ()
-depth_walk ()
-#shell_walk ()
+
+walk = {"random"  : random_walk,
+        "weighted": weighted_walk,
+        "depth"   : depth_walk,
+        "shell"   : shell_walk}
+
+walk[walk_mode] ()
 
 app = QtGui.QApplication ([])
 window = gl.GLViewWidget ()
