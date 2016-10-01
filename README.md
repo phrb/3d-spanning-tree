@@ -24,3 +24,4 @@ Usage:
 
     $ python span_tree.py [<random|weighted|depth|shell> <cube_size>]
 
+![walks](https://github.com/phrb/3d-spanning-tree/raw/master/Walks.png)
